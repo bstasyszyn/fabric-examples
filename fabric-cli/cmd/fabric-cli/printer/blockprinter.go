@@ -316,15 +316,52 @@ func (p *BlockPrinter) doPrintCollConfig(collConfig *fabriccmn.CollectionConfigP
 			p.Value("unknown config type")
 			continue
 		}
-		p.printStaticCollectionConfig(sc)
+		switch sc.Type {
+		case fabriccmn.CollectionType_COL_TRANSIENT:
+			p.printTransientCollectionConfig(sc)
+		case fabriccmn.CollectionType_COL_OFFLEDGER:
+			fallthrough
+		case fabriccmn.CollectionType_COL_DCAS:
+			p.printOffLedgerCollectionConfig(sc)
+		case fabriccmn.CollectionType_COL_PRIVATE:
+			fallthrough
+		default:
+			p.printStaticCollectionConfig(sc)
+		}
 		p.ItemEnd()
 	}
 	p.ArrayEnd()
 }
 
 func (p *BlockPrinter) printStaticCollectionConfig(config *fabriccmn.StaticCollectionConfig) {
+	p.Field("Type", fabriccmn.CollectionType_COL_PRIVATE)
 	p.Field("Name", config.Name)
 	p.Field("BlockToLive", config.BlockToLive)
+	p.Field("MaximumPeerCount", config.MaximumPeerCount)
+	p.Field("RequiredPeerCount", config.RequiredPeerCount)
+	p.Field("MemberOnlyRead", config.MemberOnlyRead)
+	p.Field("MemberOnlyWrite", config.MemberOnlyWrite)
+
+	p.Element("MemberOrgsPolicy")
+	p.PrintSignaturePolicyEnvelope(config.MemberOrgsPolicy.GetSignaturePolicy())
+	p.ElementEnd()
+}
+
+func (p *BlockPrinter) printTransientCollectionConfig(config *fabriccmn.StaticCollectionConfig) {
+	p.Field("Type", config.Type)
+	p.Field("Name", config.Name)
+	p.Field("TimeToLive", config.TimeToLive)
+	p.Field("MaximumPeerCount", config.MaximumPeerCount)
+
+	p.Element("MemberOrgsPolicy")
+	p.PrintSignaturePolicyEnvelope(config.MemberOrgsPolicy.GetSignaturePolicy())
+	p.ElementEnd()
+}
+
+func (p *BlockPrinter) printOffLedgerCollectionConfig(config *fabriccmn.StaticCollectionConfig) {
+	p.Field("Type", config.Type)
+	p.Field("Name", config.Name)
+	p.Field("TimeToLive", config.BlockToLive)
 	p.Field("MaximumPeerCount", config.MaximumPeerCount)
 	p.Field("RequiredPeerCount", config.RequiredPeerCount)
 	p.Field("MemberOnlyRead", config.MemberOnlyRead)
