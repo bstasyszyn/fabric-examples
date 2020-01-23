@@ -22,4 +22,6 @@ require (
 	github.com/stretchr/testify v1.3.0
 )
 
+replace github.com/hyperledger/fabric-protos-go => github.com/trustbloc/fabric-protos-go-ext v0.1.1-0.20191126151100-5a61374c2e1b
+
 go 1.13

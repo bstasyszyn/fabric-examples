@@ -319,13 +319,13 @@ func (p *BlockPrinter) doPrintCollConfig(collConfig *pb.CollectionConfigPackage)
 			continue
 		}
 		switch sc.Type {
-		case fabriccmn.CollectionType_COL_TRANSIENT:
+		case pb.CollectionType_COL_TRANSIENT:
 			p.printTransientCollectionConfig(sc)
-		case fabriccmn.CollectionType_COL_OFFLEDGER:
+		case pb.CollectionType_COL_OFFLEDGER:
 			fallthrough
-		case fabriccmn.CollectionType_COL_DCAS:
+		case pb.CollectionType_COL_DCAS:
 			p.printOffLedgerCollectionConfig(sc)
-		case fabriccmn.CollectionType_COL_PRIVATE:
+		case pb.CollectionType_COL_PRIVATE:
 			fallthrough
 		default:
 			p.printStaticCollectionConfig(sc)
@@ -349,7 +349,7 @@ func (p *BlockPrinter) printStaticCollectionConfig(config *pb.StaticCollectionCo
 	p.ElementEnd()
 }
 
-func (p *BlockPrinter) printTransientCollectionConfig(config *fabriccmn.StaticCollectionConfig) {
+func (p *BlockPrinter) printTransientCollectionConfig(config *pb.StaticCollectionConfig) {
 	p.Field("Type", config.Type)
 	p.Field("Name", config.Name)
 	p.Field("TimeToLive", config.TimeToLive)
@@ -360,10 +360,10 @@ func (p *BlockPrinter) printTransientCollectionConfig(config *fabriccmn.StaticCo
 	p.ElementEnd()
 }
 
-func (p *BlockPrinter) printOffLedgerCollectionConfig(config *fabriccmn.StaticCollectionConfig) {
+func (p *BlockPrinter) printOffLedgerCollectionConfig(config *pb.StaticCollectionConfig) {
 	p.Field("Type", config.Type)
 	p.Field("Name", config.Name)
-	p.Field("TimeToLive", config.BlockToLive)
+	p.Field("TimeToLive", config.TimeToLive)
 	p.Field("MaximumPeerCount", config.MaximumPeerCount)
 	p.Field("RequiredPeerCount", config.RequiredPeerCount)
 	p.Field("MemberOnlyRead", config.MemberOnlyRead)
